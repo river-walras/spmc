@@ -14,7 +14,6 @@ struct Msg
     uint64_t idx;
 };
 
-
 template <typename DurationType>
 inline uint64_t timestamp()
 {
@@ -28,8 +27,7 @@ inline uint64_t timestamp()
 // uint64_t ns = timestamp<std::chrono::nanoseconds>();
 // uint64_t ms = timestamp<std::chrono::milliseconds>();
 
-
-const uint64_t MAX_I = 1000000;
+const uint64_t MAX_I = 10000000;
 
 SPMCQueue<Msg, 512> q;
 
@@ -51,7 +49,7 @@ void read_thread(int tid)
     stat.reserve(MAX_I);
     uint64_t count = 0;
     auto reader = q.getReader();
-    
+
     while (true)
     {
         Msg *msg = reader.read();
@@ -89,9 +87,8 @@ void write_thread()
         msg.ts_ns = timestamp<std::chrono::nanoseconds>();
         msg.idx = i;
 
-        q.write([&msg](Msg &data) {
-            data = msg;
-        });
+        q.write([&msg](Msg &data)
+                { data = msg; });
     }
 }
 
@@ -106,11 +103,11 @@ int main()
         // bind_thread_to_cpu(readers[i], i);
     }
     // bind_thread_to_cpu(writer, 4); // 将写线程绑定到CPU 4
-    writer.join();
     for (int i = 0; i < 4; ++i)
     {
         readers[i].join();
     }
+    writer.join();
 
     return 0;
 }
