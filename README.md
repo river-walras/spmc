@@ -62,8 +62,55 @@ Performance measurement utility providing:
 
 ## Building
 
+### Using CMake (Recommended)
+
+#### Quick Start
 ```bash
-# Build the benchmark
+# Create build directory
+mkdir build && cd build
+
+# Configure and build (Release by default)
+cmake ..
+make
+
+# Run the benchmark
+./spmc_benchmark
+```
+
+#### Release Build (Optimized)
+```bash
+mkdir build-release && cd build-release
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+./spmc_benchmark
+```
+
+#### Debug Build (With Debug Symbols)
+```bash
+mkdir build-debug && cd build-debug
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
+./spmc_benchmark
+```
+
+#### Advanced CMake Options
+```bash
+# Specify custom compiler
+cmake -DCMAKE_CXX_COMPILER=clang++ ..
+
+# Verbose build output
+make VERBOSE=1
+
+# Parallel build (use all available cores)
+make -j$(nproc)
+
+# Install to system
+make install
+```
+
+### Manual Build (Alternative)
+```bash
+# Build the benchmark manually
 cd src
 g++ -std=c++11 -O3 -march=native -pthread main.cpp -o spmc_benchmark
 
