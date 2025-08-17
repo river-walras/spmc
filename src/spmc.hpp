@@ -3,54 +3,62 @@
 #include <atomic>
 
 template <class T, uint32_t CNT>
-class SPMCQueue {
+class SPMCQueue
+{
 public:
     // CNT must be a power of 2
     static_assert(CNT && !(CNT & (CNT - 1)), "CNT must be a power of 2");
 
-    struct Reader {
+    struct Reader
+    {
         // Check if reader is valid (not nullptr)
-        operator bool() const { 
-            return q; 
+        operator bool() const
+        {
+            return q;
         }
 
-        T* read() {
-            auto& blk = q->blks[next_idx % CNT];
-            uint32_t new_idx = ((std::atomic<uint32_t>*)&blk.idx)->load(std::memory_order_acquire);
-            
+        T *read()
+        {
+            auto &blk = q->blks[next_idx % CNT];
+            uint32_t new_idx = ((std::atomic<uint32_t> *)&blk.idx)->load(std::memory_order_acquire);
+
             // Check if the data is ready
-            if (int(new_idx - next_idx) < 0) {
+            if (int(new_idx - next_idx) < 0)
+            {
                 return nullptr;
             }
-            
+
             next_idx = new_idx + 1;
             return &blk.data;
         }
 
-        T* readLast() {
-            T* ret = nullptr;
-            while (T* cur = read()) {
+        T *readLast()
+        {
+            T *ret = nullptr;
+            while (T *cur = read())
+            {
                 ret = cur;
             }
             return ret;
         }
 
-        SPMCQueue<T, CNT>* q = nullptr;
+        SPMCQueue<T, CNT> *q = nullptr;
         uint32_t next_idx;
     };
 
-    Reader getReader() {
+    Reader getReader()
+    {
         Reader reader;
         reader.q = this;
         reader.next_idx = write_idx + 1;
         return reader;
     }
 
-    template <typename Writer>
-    void write(Writer writer) {
+    void write(const T &data)
+    {
         // Increment write_idx first, then use it
-        auto& blk = blks[++write_idx % CNT];
-        writer(blk.data);
+        auto &blk = blks[++write_idx % CNT];
+        blk.data = data;
 
         /*
          * Memory ordering explanation:
@@ -82,7 +90,14 @@ public:
          * (std::atomic<uint32_t>*)&blk.idx gets pointer location, cast to (std::atomic<uint32_t>*)
          */
 
-        ((std::atomic<uint32_t>*)&blk.idx)->store(write_idx, std::memory_order_release);
+        ((std::atomic<uint32_t> *)&blk.idx)->store(write_idx, std::memory_order_release);
+    }
+
+    void write(T &&data)
+    {
+        auto &blk = blks[++write_idx % CNT];
+        blk.data = std::move(data);
+        ((std::atomic<uint32_t> *)&blk.idx)->store(write_idx, std::memory_order_release);
     }
 
 private:
@@ -98,13 +113,14 @@ private:
      *
      * Start directly from each cache line, will not span across two cache lines
      */
-    struct alignas(64) Block {
+    struct alignas(64) Block
+    {
         uint32_t idx = 0; // 32 bits, 4 bytes
         T data;
     };
-    
+
     Block blks[CNT];
-    
+
     // Avoid sharing cache line with other data
     alignas(128) uint32_t write_idx = 0;
 };

@@ -26,7 +26,7 @@ inline uint64_t timestamp() {
 // uint64_t ns = timestamp<std::chrono::nanoseconds>();
 // uint64_t ms = timestamp<std::chrono::milliseconds>();
 
-const uint64_t MAX_I = 10000000;
+const uint64_t MAX_I = 1000000;
 
 SPMCQueue<Msg, 512> q;
 
@@ -79,9 +79,7 @@ void write_thread() {
         msg.ts_ns = timestamp<std::chrono::nanoseconds>();
         msg.idx = i;
 
-        q.write([&msg](Msg& data) { 
-            data = msg; 
-        });
+        q.write(msg);
     }
 }
 
