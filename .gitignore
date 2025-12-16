@@ -31,6 +31,7 @@ env/
 # CMake artifacts
 CMakeCache.txt
 CMakeFiles/
+.cache
 
 # IDE
 /.vscode
