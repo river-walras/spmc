@@ -1,3 +1,51 @@
+# Build directories
 /build
-/.vscode
 /build-release
+_skbuild/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# CMake artifacts
+CMakeCache.txt
+CMakeFiles/
+
+# IDE
+/.vscode
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Distribution
+*.whl
+*.tar.gz
+
+# Executables
+spmc_benchmark
+
+# UV
+uv.lock

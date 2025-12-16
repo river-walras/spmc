@@ -1,0 +1,7 @@
+# ninja log v5
+1	555	1765851913603445793	CMakeFiles/spmc_benchmark.dir/benchmarks/main.cpp.o	86c6a8d82d7dd109
+556	601	1765851913649446255	spmc_benchmark	ac71cca5e19c3fae
+1	8586	1765851921612526217	CMakeFiles/_core.dir/msgbus/python_bindings.cpp.o	279566e94355a121
+8587	8670	1765851921717527272	_core.cpython-312-x86_64-linux-gnu.so	528658468173223e
+2	964	1765852600202669563	CMakeFiles/spmc_benchmark.dir/benchmarks/main.cpp.o	86c6a8d82d7dd109
+965	1013	1765852600250670083	spmc_benchmark	ac71cca5e19c3fae

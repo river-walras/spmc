@@ -26,7 +26,7 @@ inline uint64_t timestamp() {
 // uint64_t ns = timestamp<std::chrono::nanoseconds>();
 // uint64_t ms = timestamp<std::chrono::milliseconds>();
 
-const uint64_t MAX_I = 1000000;
+const uint64_t MAX_I = 100000000;
 
 SPMCQueue<Msg, 512> q;
 

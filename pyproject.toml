@@ -1,0 +1,25 @@
+[project]
+name = "msgbus"
+version = "0.1.0"
+description = "High-performance SPMC message bus for market data distribution with ultra-low latency"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "River", email = "river@example.com"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = [
+    "scikit-build-core>=0.3.3",
+    "pybind11>=2.10.0",
+]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+cmake.version = ">=3.15"
+cmake.build-type = "Release"
+wheel.packages = ["msgbus"]
+
+[tool.scikit-build.cmake.define]
+PYBIND11_FINDPYTHON = "ON"
